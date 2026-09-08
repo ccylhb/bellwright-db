@@ -1,0 +1,100 @@
+---
+import Base from "../layouts/Base.astro";
+import Related from "../components/Related.astro";
+import armor from "../data/bellwright_armor.json";
+
+const n = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+};
+const pct = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+};
+const items = armor
+  .map((x) => ({
+    slug: x.slug,
+    name: x.title,
+    slot: (x.fields?.slot || "Other").trim(),
+    armor: n(x.fields?.armor),
+    speed: pct(x.fields?.speed),
+    icon: x.icon_file || "",
+  }))
+  .sort((a, b) => b.armor - a.armor);
+const slots = [...new Set(items.map((x) => x.slot).filter(Boolean))];
+---
+<Base
+  title="Bellwright Loadout Builder — compare armor totals & speed penalty"
+  description="Bellwright loadout builder: pick armor pieces per slot and see total armor value and total movement speed penalty — find the best armor per speed tradeoff."
+>
+  <h1>Loadout Builder</h1>
+  <p class="muted">Pick one piece per slot — totals update live. Heavier armor protects more but slows you down: tradeoff shown below.</p>
+
+  <div class="grid grid-2" style="margin:1rem 0">
+    <div class="card">
+      <strong>1 · Pick pieces per slot</strong>
+      {slots.map((slot) => (
+        <label style="display:block;margin:0.4rem 0">
+          <span class="muted" style="display:inline-block;width:80px">{slot}:</span>
+          <select class="slot-pick" data-slot={slot} style="max-width:280px">
+            <option value="">— none —</option>
+            {items.filter((x) => x.slot === slot).map((x) => (
+              <option value={x.slug}>{x.name} ({x.armor} armor, {x.speed}%)</option>
+            ))}
+          </select>
+        </label>
+      ))}
+    </div>
+    <div class="card">
+      <strong>2 · Your loadout</strong>
+      <ul id="picked" style="min-height:140px;margin:0.5rem 0"></ul>
+      <div class="stat-row" style="margin-top:0.75rem">
+        <div><div class="stat-num" id="tArmor">0</div><div class="stat-label">Total armor</div></div>
+        <div><div class="stat-num" id="tSpeed">0%</div><div class="stat-label">Speed change</div></div>
+      </div>
+      <p id="verdict" class="muted" style="margin-top:0.5rem"></p>
+      <button id="clear" style="background:var(--bg-soft);color:var(--text);border:1px solid var(--border)">Clear</button>
+    </div>
+  </div>
+
+  <script define:vars={{ items, slots }}>
+    const bySlug = Object.fromEntries(items.map((x) => [x.slug, x]));
+    const picks = {};
+    const listEl = document.getElementById("picked");
+    const tA = document.getElementById("tArmor");
+    const tS = document.getElementById("tSpeed");
+    const verdict = document.getElementById("verdict");
+    const render = () => {
+      const chosen = Object.values(picks).filter(Boolean).map((s) => bySlug[s]);
+      listEl.innerHTML = chosen.map((it) => `<li>${it.name} — ${it.armor} armor, ${it.speed}% speed (${it.slot})</li>`).join("");
+      const a = chosen.reduce((sum, x) => sum + x.armor, 0);
+      const s = chosen.reduce((sum, x) => sum + x.speed, 0);
+      tA.textContent = a;
+      tS.textContent = s + "%";
+      verdict.textContent = s <= -40
+        ? "⚠ Very heavy — you will be slow. Consider swapping a piece."
+        : a > 0 ? "✓ Loadout set — balance looks reasonable." : "Pick some pieces.";
+    };
+    document.querySelectorAll(".slot-pick").forEach((sel) => {
+      sel.addEventListener("change", () => {
+        if (sel.value) picks[sel.dataset.slot] = sel.value;
+        else delete picks[sel.dataset.slot];
+        render();
+      });
+    });
+    document.getElementById("clear").addEventListener("click", () => {
+      Object.keys(picks).forEach((k) => delete picks[k]);
+      document.querySelectorAll(".slot-pick").forEach((s) => { s.value = ""; });
+      render();
+    });
+    render();
+  </script>
+
+  <Related
+    links={[
+      { href: "/armor/", title: "Armor & Clothing", sub: "All armor values" },
+      { href: "/rankings/", title: "Rankings", sub: "Best armor per speed" },
+      { href: "/weapons/", title: "Weapons", sub: "Damage values" },
+    ]}
+  />
+</Base>

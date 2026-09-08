@@ -1,0 +1,67 @@
+---
+import Base from "../layouts/Base.astro";
+import Related from "../components/Related.astro";
+import armor from "../data/bellwright_armor.json";
+import weapons from "../data/bellwright_weapons.json";
+import food from "../data/bellwright_food.json";
+import tools from "../data/bellwright_tools.json";
+
+const total = armor.length + weapons.length + food.length + tools.length;
+const n = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+};
+const bestArmor = armor.map((x) => ({ ...x, av: n(x.fields?.armor) })).filter((x) => x.av > 0).sort((a, b) => b.av - a.av)[0];
+const bestWeapon = weapons.map((x) => ({ ...x, dmg: n(x.fields?.cutti) })).filter((x) => x.dmg > 0).sort((a, b) => b.dmg - a.dmg)[0];
+---
+<Base title="BellwrightDB — Bellwright armor values, weapon damage & food stats" description={`Bellwright stats database: ${total} entries — armor ratings and speed penalties, weapon cutting/pierce damage, food health and stamina values with a loadout builder.`}>
+  <div style="text-align:center;margin:2.5rem 0 2rem">
+    <h1 style="font-size:clamp(2.2rem,6vw,3.4rem)">Liberate the land, by the numbers.</h1>
+    <p class="muted" style="font-size:1.15rem;max-width:640px;margin:0.75rem auto">
+      {total} Bellwright entries with exact values — what to wear, what to wield, what to eat. Every stat, no fluff.
+    </p>
+    <p style="margin-top:1.5rem">
+      <a href="/armor/" style="display:inline-block;background:var(--accent);color:var(--bg);font-weight:700;padding:0.7rem 1.4rem;border-radius:10px;margin:0.25rem">Armor values</a>
+      <a href="/loadout-builder/" style="display:inline-block;border:1px solid var(--accent);color:var(--accent);font-weight:700;padding:0.7rem 1.4rem;border-radius:10px;margin:0.25rem">Loadout Builder</a>
+    </p>
+  </div>
+
+  <div class="grid grid-3" style="margin:2rem 0">
+    <a class="card" href="/armor/" style="color:inherit">
+      <div class="stat-num">{armor.length}</div>
+      <div class="stat-label">Armor · protection</div>
+      <p class="muted" style="font-size:0.9rem">Armor ratings and speed penalties per piece and slot.</p>
+    </a>
+    <a class="card" href="/weapons/" style="color:inherit">
+      <div class="stat-num">{weapons.length}</div>
+      <div class="stat-label">Weapons · damage</div>
+      <p class="muted" style="font-size:0.9rem">Cutting and pierce damage, speed and reach per weapon.</p>
+    </a>
+    <a class="card" href="/food/" style="color:inherit">
+      <div class="stat-num">{food.length}</div>
+      <div class="stat-label">Food · recovery</div>
+      <p class="muted" style="font-size:0.9rem">Health and stamina restoration for every food.</p>
+    </a>
+  </div>
+
+  <h2>Jump to the answer</h2>
+  <div class="card answer-card">
+    <ul style="margin:0;padding-left:1.2rem;line-height:2">
+      <li>Highest armor: <a href={`/armor/${bestArmor?.slug}/`}>{bestArmor?.title}</a> — {bestArmor?.av} armor</li>
+      <li>Top cutting damage: <a href={`/weapons/${bestWeapon?.slug}/`}>{bestWeapon?.title}</a> — {bestWeapon?.dmg}</li>
+      <li>Tools & resources: <a href="/tools/">{tools.length} entries</a> · Rankings: <a href="/rankings/">leaderboards</a></li>
+    </ul>
+  </div>
+
+  <Related
+    heading="All boards"
+    links={[
+      { href: "/armor/", title: "Armor & Clothing", sub: `${armor.length} entries` },
+      { href: "/weapons/", title: "Weapons", sub: `${weapons.length} entries` },
+      { href: "/food/", title: "Food", sub: `${food.length} entries` },
+      { href: "/tools/", title: "Tools & Resources", sub: `${tools.length} entries` },
+      { href: "/rankings/", title: "Rankings", sub: "Leaderboards" },
+      { href: "/loadout-builder/", title: "Loadout Builder", sub: "Build your armor set", tool: true },
+    ]}
+  />
+</Base>

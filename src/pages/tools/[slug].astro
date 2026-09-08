@@ -1,0 +1,38 @@
+---
+import Base from "../../layouts/Base.astro";
+import Related from "../../components/Related.astro";
+import EntryStats from "../../components/EntryStats.astro";
+import tools from "../../data/bellwright_tools.json";
+
+export function getStaticPaths() {
+  return tools.map((x) => ({ params: { slug: x.slug }, props: { x } }));
+}
+
+const { x } = Astro.props;
+const f = x.fields || {};
+const similar = tools
+  .filter((o) => o.slug !== x.slug && (o.fields?.categ || o.fields?.category || "") === (f.categ || f.category || ""))
+  .slice(0, 6);
+---
+<Base
+  title={`${x.title} — Bellwright tools stats`}
+  description={`${x.title}: Bellwright tools values — exact stats from the wiki infobox.`}
+>
+  <h1 class="icon-h1">
+    {x.icon_file ? <img src={`/icons/${x.icon_file}`} alt={x.title} loading="eager" /> : null}
+    <span>{x.title}</span>
+  </h1>
+  {x.intro && <p>{x.intro}</p>}
+  <EntryStats entry={x} keys={["category", "categ"]} labels={{ category: "Category", categ: "Category" }} />
+  <Related
+    links={[
+      ...similar.map((s) => ({
+        href: `/tools/${s.slug}/`,
+        title: s.title,
+        icon: s.icon_file ? `/icons/${s.icon_file}` : undefined,
+      })),
+      { href: "/tools/", title: "All Tools & Resources", sub: "Sortable table" },
+      { href: "/rankings/", title: "Rankings", sub: "Best picks" },
+    ]}
+  />
+</Base>

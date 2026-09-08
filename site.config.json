@@ -1,0 +1,31 @@
+{
+  "siteName": "BellwrightDB",
+  "siteUrl": "https://bellwright-db.pages.dev",
+  "tagline": "Bellwright database — armor values, weapon damage & food stats",
+  "description": "Bellwright stats: armor ratings and speed penalties, weapon cutting and pierce damage, food health and stamina values — with a loadout builder.",
+  "adsenseClientId": "ca-pub-3245910354455258",
+  "adsensePublisherId": "pub-3245910354455258",
+  "favicon": "🏹",
+  "footerNote": "Unofficial fan-made database for Bellwright. Not affiliated with Donkey Crew.",
+  "theme": {
+    "bg": "#131015",
+    "bgSoft": "#1a151d",
+    "card": "#221b26",
+    "border": "#3a2f40",
+    "text": "#ece5ef",
+    "muted": "#a394aa",
+    "accent": "#c9a227",
+    "accent2": "#e3c25a",
+    "good": "#7fb069",
+    "bad": "#c75146"
+  },
+  "nav": [
+    { "href": "/armor/", "label": "Armor" },
+    { "href": "/weapons/", "label": "Weapons" },
+    { "href": "/food/", "label": "Food" },
+    { "href": "/tools/", "label": "Tools" },
+    { "href": "/rankings/", "label": "Rankings" },
+    { "href": "/loadout-builder/", "label": "Loadout Builder", "tool": true },
+    { "href": "/search/", "label": "A-Z" }
+  ]
+}

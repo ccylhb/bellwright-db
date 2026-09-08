@@ -1,0 +1,134 @@
+---
+import Base from "../layouts/Base.astro";
+import Related from "../components/Related.astro";
+import armor from "../data/bellwright_armor.json";
+import weapons from "../data/bellwright_weapons.json";
+import food from "../data/bellwright_food.json";
+
+const n = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+};
+const bestArmor = armor
+  .map((x) => ({ ...x, av: n(x.fields?.armor) }))
+  .filter((x) => x.av > 0)
+  .sort((a, b) => b.av - a.av)
+  .slice(0, 12);
+const armorRatio = armor
+  .map((x) => ({ ...x, av: n(x.fields?.armor), sp: n(x.fields?.speed) }))
+  .filter((x) => x.av > 0 && x.sp < 0)
+  .map((x) => ({ ...x, ratio: Math.round((x.av / -x.sp) * 10) / 10 }))
+  .sort((a, b) => b.ratio - a.ratio)
+  .slice(0, 10);
+const bestCut = weapons
+  .map((x) => ({ ...x, dmg: n(x.fields?.cutti) }))
+  .filter((x) => x.dmg > 0)
+  .sort((a, b) => b.dmg - a.dmg)
+  .slice(0, 10);
+const bestPierce = weapons
+  .map((x) => ({ ...x, dmg: n(x.fields?.mpier) }))
+  .filter((x) => x.dmg > 0)
+  .sort((a, b) => b.dmg - a.dmg)
+  .slice(0, 10);
+const fastestWeapons = weapons
+  .map((x) => ({ ...x, sp: n(x.fields?.speed) }))
+  .filter((x) => x.sp > 0)
+  .sort((a, b) => b.sp - a.sp)
+  .slice(0, 10);
+const bestFood = food
+  .map((x) => ({ ...x, hp: n(x.fields?.health) }))
+  .filter((x) => x.hp > 0)
+  .sort((a, b) => b.hp - a.hp)
+  .slice(0, 10);
+---
+<Base
+  title="Bellwright Rankings — best armor, weapons & food"
+  description="Bellwright leaderboards: highest armor value, best armor per speed penalty, top cutting and pierce damage weapons, fastest weapons and best healing food."
+>
+  <h1>Rankings</h1>
+  <p class="muted">Leaderboards computed from full infobox data. Click any entry for details.</p>
+
+  <div class="grid grid-2" style="margin:1.25rem 0">
+    <div class="card">
+      <h2 style="margin-top:0">🛡️ Highest armor</h2>
+      <ol class="rank-list">
+        {bestArmor.map((x) => (
+          <li>
+            <a href={`/armor/${x.slug}/`}>{x.title}</a>
+            {x.icon_file && <img src={`/icons/${x.icon_file}`} alt="" width="20" height="20" style="vertical-align:middle" loading="lazy" />}
+            <span class="muted"> — {x.av} armor ({x.fields?.slot || "?"})</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">⚖️ Best armor per speed loss</h2>
+      <ol class="rank-list">
+        {armorRatio.map((x) => (
+          <li>
+            <a href={`/armor/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.ratio} armor per 1% speed</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">🗡️ Top cutting damage</h2>
+      <ol class="rank-list">
+        {bestCut.map((x) => (
+          <li>
+            <a href={`/weapons/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.dmg} cutting</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">🔫 Top pierce damage</h2>
+      <ol class="rank-list">
+        {bestPierce.map((x) => (
+          <li>
+            <a href={`/weapons/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.dmg} pierce</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">⚡ Fastest weapons</h2>
+      <ol class="rank-list">
+        {fastestWeapons.map((x) => (
+          <li>
+            <a href={`/weapons/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — speed {x.sp}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">🍗 Best healing food</h2>
+      <ol class="rank-list">
+        {bestFood.map((x) => (
+          <li>
+            <a href={`/food/${x.slug}/`}>{x.title}</a>
+            {x.icon_file && <img src={`/icons/${x.icon_file}`} alt="" width="20" height="20" style="vertical-align:middle" loading="lazy" />}
+            <span class="muted"> — {x.hp > 0 ? "+" : ""}{x.hp} health</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+
+  <Related
+    links={[
+      { href: "/loadout-builder/", title: "Loadout Builder", sub: "Build your armor set", tool: true },
+      { href: "/armor/", title: "Armor & Clothing", sub: "All armor values" },
+      { href: "/weapons/", title: "Weapons", sub: "All weapon stats" },
+    ]}
+  />
+</Base>
+
+<style>
+  .rank-list { margin: 0; padding-left: 1.3rem; line-height: 1.9; }
+  .rank-list img { margin-left: 0.3rem; }
+</style>

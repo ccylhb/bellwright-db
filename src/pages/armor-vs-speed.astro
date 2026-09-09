@@ -1,0 +1,43 @@
+---
+import Base from "../layouts/Base.astro";
+import DataTable from "../components/DataTable.astro";
+import armor from "../data/bellwright_armor.json";
+const n = (v: any) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? m[0] : "";
+};
+const num = (v: any) => { const ms = String(v ?? "").match(/-?\d+(?:\.\d+)?/g); return ms ? Math.max(...ms.map(Number)) : 0; };
+const spd = (v: any) => { const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
+let data = armor.slice();
+data = data.sort((a: any, b: any) => num(b.fields?.armor) - num(a.fields?.armor));
+const rows = data.map((x: any) => ({
+    name: `<a href="/armor/${x.slug}/">${x.title}</a>${x.icon_file ? ` <img src="/icons/${x.icon_file}" alt="" width="22" height="22" style="vertical-align:middle" loading="lazy" />` : ""}`,
+
+    armor: num(x.fields?.armor),
+    speed: spd(x.fields?.speed),
+    tier: (x.fields?.tier || "").slice(0, 10),
+    slot: (x.fields?.slot || "").slice(0, 14),
+    weight: num(x.fields?.weight),
+  }));
+---
+<Base
+  title={`Armor vs Speed — The Movement Tradeoff`}
+  description={`Bellwright armor ranked by armor rating with the movement speed penalty of every set — heavy protection always slows you down.`}
+>
+  <h1>Armor vs Speed — The Movement Tradeoff</h1>
+  <p class="muted">Bellwright armor ranked by armor rating with the movement speed penalty of every set — heavy protection always slows you down.</p>
+  
+  <DataTable
+    id="armor-vs-speed"
+    rows={rows as any}
+    searchPlaceholder="Filter..."
+    columns={[
+      { key: "name", label: "Armor" },
+      { key: "armor", label: "Armor", type: "number" },
+      { key: "speed", label: "Speed %", type: "number" },
+      { key: "tier", label: "Tier" },
+      { key: "slot", label: "Slot" },
+      { key: "weight", label: "Weight", type: "number" },
+    ]}
+  />
+</Base>

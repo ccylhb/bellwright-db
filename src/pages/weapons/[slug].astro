@@ -3,6 +3,8 @@ import Base from "../../layouts/Base.astro";
 import Related from "../../components/Related.astro";
 import EntryStats from "../../components/EntryStats.astro";
 import weapons from "../../data/bellwright_weapons.json";
+import mesh from "../../data/mesh.json";
+import { introHtml } from "../../lib/mesh";
 
 export function getStaticPaths() {
   return weapons.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -13,6 +15,7 @@ const f = x.fields || {};
 const similar = weapons
   .filter((o) => o.slug !== x.slug && (o.fields?.categ || o.fields?.category || "") === (f.categ || f.category || ""))
   .slice(0, 6);
+const ihtml = introHtml(x.intro, mesh, x.title);
 ---
 <Base
   title={`${x.title} — Bellwright weapons stats`}
@@ -22,7 +25,7 @@ const similar = weapons
     {x.icon_file ? <img src={`/icons/${x.icon_file}`} alt={x.title} loading="eager" /> : null}
     <span>{x.title}</span>
   </h1>
-  {x.intro && <p>{x.intro}</p>}
+  {ihtml && <p set:html={ihtml}></p>}
   <EntryStats entry={x} keys={["cutti", "mpier", "speed", "lengt", "hand", "categ", "requs"]} labels={{ cutti: "Cutting damage", mpier: "Pierce damage", speed: "Speed", lengt: "Length", hand: "Hand", categ: "Category", requs: "Required skill level" }} />
   <Related
     links={[

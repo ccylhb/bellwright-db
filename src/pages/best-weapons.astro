@@ -1,0 +1,46 @@
+---
+import Base from "../layouts/Base.astro";
+import DataTable from "../components/DataTable.astro";
+import weapons from "../data/bellwright_weapons.json";
+const n = (v: any) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? m[0] : "";
+};
+const num = (v: any) => { const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/); return m ? parseFloat(m[0]) : 0; };
+let data = weapons.slice();
+data = data.sort((a: any, b: any) =>
+  (num(b.fields?.cutti) + num(b.fields?.mpier)) - (num(a.fields?.cutti) + num(a.fields?.mpier))
+);
+const rows = data.map((x: any) => ({
+    name: `<a href="/weapons/${x.slug}/">${x.title}</a>${x.icon_file ? ` <img src="/icons/${x.icon_file}" alt="" width="22" height="22" style="vertical-align:middle" loading="lazy" />` : ""}`,
+
+    total: num(x.fields?.cutti) + num(x.fields?.mpier),
+    cutti: num(x.fields?.cutti),
+    mpier: num(x.fields?.mpier),
+    speed: num(x.fields?.speed),
+    lengt: num(x.fields?.lengt),
+    hand: (x.fields?.hand || "").slice(0, 10),
+  }));
+---
+<Base
+  title={`Best Weapons — Cutting & Pierce Damage`}
+  description={`Bellwright weapons ranked by total cutting + pierce damage, with swing speed and reach — the best melee for each hand type.`}
+>
+  <h1>Best Weapons — Cutting & Pierce Damage</h1>
+  <p class="muted">Bellwright weapons ranked by total cutting + pierce damage, with swing speed and reach — the best melee for each hand type.</p>
+  
+  <DataTable
+    id="best-weapons"
+    rows={rows as any}
+    searchPlaceholder="Filter..."
+    columns={[
+      { key: "name", label: "Weapon" },
+      { key: "total", label: "Total dmg", type: "number" },
+      { key: "cutti", label: "Cutting", type: "number" },
+      { key: "mpier", label: "Pierce", type: "number" },
+      { key: "speed", label: "Speed", type: "number" },
+      { key: "lengt", label: "Length", type: "number" },
+      { key: "hand", label: "Hand" },
+    ]}
+  />
+</Base>

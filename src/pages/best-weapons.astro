@@ -21,6 +21,16 @@ const rows = data.map((x: any) => ({
     lengt: num(x.fields?.lengt),
     hand: (x.fields?.hand || "").slice(0, 10),
   }));
+const __ld = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `Best Weapons — Cutting & Pierce Damage`,
+    description: `Bellwright weapons ranked by total cutting + pierce damage, with swing speed and reach — the best melee for each hand type.`,
+    mainEntityOfPage: "https://bellwright-db.pages.dev/best-weapons/",
+  },
+];
+
 ---
 <Base
   title={`Best Weapons — Cutting & Pierce Damage`}
@@ -43,4 +53,5 @@ const rows = data.map((x: any) => ({
       { key: "hand", label: "Hand" },
     ]}
   />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(__ld)}></script>
 </Base>

@@ -15,6 +15,18 @@ const n = (v) => {
 };
 const bestArmor = armor.map((x) => ({ ...x, av: n(x.fields?.armor) })).filter((x) => x.av > 0).sort((a, b) => b.av - a.av)[0];
 const bestWeapon = weapons.map((x) => ({ ...x, dmg: n(x.fields?.cutti) })).filter((x) => x.dmg > 0).sort((a, b) => b.dmg - a.dmg)[0];
+const __ld = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "BellwrightDB",
+  url: "https://bellwright-db.pages.dev/",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: { "@type": "EntryPoint", urlTemplate: "https://bellwright-db.pages.dev/search/?q={search_term_string}" },
+    "query-input": "required name=search_term_string",
+  },
+};
+
 ---
 <Base title="BellwrightDB — Bellwright armor values, weapon damage & food stats" description={`Bellwright stats database: ${total} entries — armor ratings and speed penalties, weapon cutting/pierce damage, food health and stamina values with a loadout builder.`}>
   <div style="text-align:center;margin:2.5rem 0 2rem">
@@ -74,4 +86,5 @@ const bestWeapon = weapons.map((x) => ({ ...x, dmg: n(x.fields?.cutti) })).filte
       { href: "/loadout-builder/", title: "Loadout Builder", sub: "Build your armor set", tool: true },
     ]}
   />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(__ld)}></script>
 </Base>

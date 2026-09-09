@@ -19,6 +19,16 @@ const rows = data.map((x: any) => ({
     slot: (x.fields?.slot || "").slice(0, 14),
     weight: num(x.fields?.weight),
   }));
+const __ld = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `Armor vs Speed — The Movement Tradeoff`,
+    description: `Bellwright armor ranked by armor rating with the movement speed penalty of every set — heavy protection always slows you down.`,
+    mainEntityOfPage: "https://bellwright-db.pages.dev/armor-vs-speed/",
+  },
+];
+
 ---
 <Base
   title={`Armor vs Speed — The Movement Tradeoff`}
@@ -40,4 +50,5 @@ const rows = data.map((x: any) => ({
       { key: "weight", label: "Weight", type: "number" },
     ]}
   />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(__ld)}></script>
 </Base>

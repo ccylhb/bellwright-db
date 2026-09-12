@@ -1,4 +1,5 @@
 ---
+const SITE = Astro.site?.origin ?? "";
 import Base from "../layouts/Base.astro";
 import DataTable from "../components/DataTable.astro";
 import armor from "../data/bellwright_armor.json";
@@ -25,7 +26,7 @@ const __ld = [
     "@type": "Article",
     headline: `Armor vs Speed — The Movement Tradeoff`,
     description: `Bellwright armor ranked by armor rating with the movement speed penalty of every set — heavy protection always slows you down.`,
-    mainEntityOfPage: "https://bellwright-db.pages.dev/armor-vs-speed/",
+    mainEntityOfPage: SITE + "/armor-vs-speed/",
   },
 ];
 

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bellwright-db.pages.dev/sitemap.xml
+Sitemap: https://bellwright.lootseer.com/sitemap.xml

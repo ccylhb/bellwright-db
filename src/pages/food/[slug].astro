@@ -6,6 +6,7 @@ import EntryStats from "../../components/EntryStats.astro";
 import food from "../../data/bellwright_food.json";
 import mesh from "../../data/mesh.json";
 import { introHtml } from "../../lib/mesh";
+import { cl, pick, desc, stats, introSentence, best } from "../../lib/seo";
 
 export function getStaticPaths() {
   return food.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -36,10 +37,18 @@ const __ld = [
     mainEntityOfPage: SITE + "/food/" + __slug + "/",
   },
 ];
+
+// SEO: this board has no numeric infobox fields, so the scraped intro sentence
+// is the best available answer; fall back to a topic sentence.
+const description = best(
+  x.intro,
+  desc(`${x.title}:`, "Bellwright food item — nutrition, effects, and how to obtain it."),
+  30
+);
 ---
 <Base
   title={`${x.title} — Bellwright food stats`}
-  description={`${x.title}: Bellwright food values — exact stats from the wiki infobox.`}
+  description={description}
 >
   <h1 class="icon-h1">
     {x.icon_file ? <img src={`/icons/${x.icon_file}`} alt={x.title} loading="eager" /> : null}

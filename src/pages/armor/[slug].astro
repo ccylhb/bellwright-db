@@ -6,6 +6,7 @@ import EntryStats from "../../components/EntryStats.astro";
 import armor from "../../data/bellwright_armor.json";
 import mesh from "../../data/mesh.json";
 import { introHtml } from "../../lib/mesh";
+import { cl, pick, desc, stats, introSentence, best } from "../../lib/seo";
 
 export function getStaticPaths() {
   return armor.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -36,10 +37,24 @@ const __ld = [
     mainEntityOfPage: SITE + "/armor/" + __slug + "/",
   },
 ];
+
+// SEO: lead with concrete stats; fall back to the scraped intro sentence.
+const description =
+  desc(
+    `${x.title}:`,
+    cl(f.categ) && cl(f.slot) && `${cl(f.categ)} ${cl(f.slot)} —`,
+    stats(
+      cl(f.armor) && `armor ${cl(f.armor)}`,
+      cl(f.speed) && `speed ${cl(f.speed)}`,
+      cl(f.weight) && `weight ${cl(f.weight)}`,
+      cl(f.requs) && `requires ${cl(f.requs)}`
+    ),
+    "Bellwright armor stats."
+  ) || introSentence(x.intro);
 ---
 <Base
   title={`${x.title} — Bellwright armor stats`}
-  description={`${x.title}: Bellwright armor values — exact stats from the wiki infobox.`}
+  description={description}
 >
   <h1 class="icon-h1">
     {x.icon_file ? <img src={`/icons/${x.icon_file}`} alt={x.title} loading="eager" /> : null}

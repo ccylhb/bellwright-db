@@ -6,6 +6,7 @@ import EntryStats from "../../components/EntryStats.astro";
 import weapons from "../../data/bellwright_weapons.json";
 import mesh from "../../data/mesh.json";
 import { introHtml } from "../../lib/mesh";
+import { cl, pick, desc, stats, introSentence, best } from "../../lib/seo";
 
 export function getStaticPaths() {
   return weapons.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -36,10 +37,26 @@ const __ld = [
     mainEntityOfPage: SITE + "/weapons/" + __slug + "/",
   },
 ];
+
+// SEO: lead with concrete stats; fall back to the scraped intro sentence.
+const description =
+  desc(
+    `${x.title}:`,
+    cl(f.categ) && `${cl(f.categ)}${f.hand ? ` (${cl(f.hand)})` : ""} —`,
+    stats(
+      cl(f.cutti) && `cutting ${cl(f.cutti)}`,
+      cl(f.mpier) && `pierce ${cl(f.mpier)}`,
+      cl(f.blunt) && `blunt ${cl(f.blunt)}`,
+      cl(f.speed) && `speed ${cl(f.speed)}`,
+      cl(f.lengt) && `length ${cl(f.lengt)}`,
+      cl(f.requs) && `requires ${cl(f.requs)}`
+    ),
+    "Bellwright weapon stats."
+  ) || introSentence(x.intro);
 ---
 <Base
   title={`${x.title} — Bellwright weapons stats`}
-  description={`${x.title}: Bellwright weapons values — exact stats from the wiki infobox.`}
+  description={description}
 >
   <h1 class="icon-h1">
     {x.icon_file ? <img src={`/icons/${x.icon_file}`} alt={x.title} loading="eager" /> : null}

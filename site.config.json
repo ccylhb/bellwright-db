@@ -48,6 +48,16 @@
     {
       "href": "/search/",
       "label": "A-Z"
+    },
+    {
+      "href": "/armor-vs-speed/",
+      "label": "Armor vs Speed",
+      "tool": true
+    },
+    {
+      "href": "/best-weapons/",
+      "label": "Best Weapons",
+      "tool": true
     }
   ],
   "sisterSites": [

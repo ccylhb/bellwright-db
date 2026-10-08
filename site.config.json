@@ -20,12 +20,60 @@
     "bad": "#c75146"
   },
   "nav": [
-    { "href": "/armor/", "label": "Armor" },
-    { "href": "/weapons/", "label": "Weapons" },
-    { "href": "/food/", "label": "Food" },
-    { "href": "/tools/", "label": "Tools" },
-    { "href": "/rankings/", "label": "Rankings" },
-    { "href": "/loadout-builder/", "label": "Loadout Builder", "tool": true },
-    { "href": "/search/", "label": "A-Z" }
-  ]
+    {
+      "href": "/armor/",
+      "label": "Armor"
+    },
+    {
+      "href": "/weapons/",
+      "label": "Weapons"
+    },
+    {
+      "href": "/food/",
+      "label": "Food"
+    },
+    {
+      "href": "/tools/",
+      "label": "Tools"
+    },
+    {
+      "href": "/rankings/",
+      "label": "Rankings"
+    },
+    {
+      "href": "/loadout-builder/",
+      "label": "Loadout Builder",
+      "tool": true
+    },
+    {
+      "href": "/search/",
+      "label": "A-Z"
+    }
+  ],
+  "sisterSites": [
+    {
+      "name": "VRisingDB",
+      "url": "https://vrising.lootseer.com",
+      "blurb": "All 64 V Blood bosses, gear tiers and drop tables."
+    },
+    {
+      "name": "FactorDB",
+      "url": "https://abiotic.lootseer.com",
+      "blurb": "Weapons, armour, crafting and portal destinations from the GATE facility."
+    },
+    {
+      "name": "GroundDB",
+      "url": "https://grounded.lootseer.com",
+      "blurb": "Weapons, armour, creatures and trinkets with a gear planner."
+    },
+    {
+      "name": "ConanDB",
+      "url": "https://conan.lootseer.com",
+      "blurb": "Weapon damage, armour values, thrall stats and consumables."
+    }
+  ],
+  "hubSite": {
+    "name": "LootSeer",
+    "url": "https://lootseer.com"
+  }
 }
